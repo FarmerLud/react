@@ -1,20 +1,39 @@
-import { useCustomSelector, useCustomDispatch } from '../../hooks/redux'
-import { setAccessToken } from '../../redux/slices/auth'
+import { useCustomDispatch, useCustomSelector } from '../../hooks/redux'
+import { login } from '../../redux/slices/auth'
+import { Button, Switch } from '@mui/material'
+import { setThemeMode } from '../../redux/slices/settings'
 
 const Home = () => {
-  const { auth } = useCustomSelector((state) => state)
+  const {
+    auth: { accessToken, isLoading },
+    settings: { themeMode }
+  } = useCustomSelector((state) => state)
   const dispatch = useCustomDispatch()
 
-  console.log(auth.accessToken)
+  console.log(accessToken, isLoading)
 
   const handleLogin = () => {
-    dispatch(setAccessToken('asdadfsdfsdfsdf'))
+    login(
+      {
+        email: 'eve.holt@reqres.in',
+        password: 'cityslicka'
+      },
+      dispatch
+    )
+  }
+
+  const handleChangeTheme = () => {
+    dispatch(setThemeMode(themeMode === 'light' ? 'dark' : 'light'))
   }
 
   return (
     <>
       Home
-      <button onClick={handleLogin}>Botón</button>
+      <Button variant="contained" onClick={handleLogin}>
+        Botón
+      </Button>
+      <Switch onChange={handleChangeTheme}></Switch>
+      <p>{isLoading ? 'loading...' : ':)'}</p>
     </>
   )
 }
